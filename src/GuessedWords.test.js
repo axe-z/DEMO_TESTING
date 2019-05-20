@@ -41,6 +41,7 @@ describe("si aucun props est tenté", () => {
     const instructions = findByTestAttr(wrapper, "guess-instructions");
     expect(instructions.text().length).not.toBe(0); //not !renverse
   });
+  //fin du describe et ajout
 });
 
 describe("si des mots sont testé", () => {});
