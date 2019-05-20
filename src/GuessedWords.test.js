@@ -44,4 +44,9 @@ describe("si aucun props est tenté", () => {
   //fin du describe et ajout
 });
 
-describe("si des mots sont testé", () => {});
+describe("si des mots sont testé", () => {
+  let wrapper;
+  beforeEach(() => {
+    wrapper = setup({ ...defaultProps });
+  });
+});
