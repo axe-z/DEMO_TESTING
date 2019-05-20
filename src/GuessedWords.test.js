@@ -49,4 +49,8 @@ describe("si des mots sont testé", () => {
   beforeEach(() => {
     wrapper = setup({ ...defaultProps });
   });
+  test("tester avec props", () => {
+    const guessedComponent = findByTestAttr(wrapper, "component-guessed");
+    expect(guessedComponent.length).toBe(1);
+  });
 });
