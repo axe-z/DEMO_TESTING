@@ -53,5 +53,5 @@ describe("si des mots sont testé", () => {
     const guessedComponent = findByTestAttr(wrapper, "component-guessed");
     expect(guessedComponent.length).toBe(1);
   });
-  // console.log("autre-autre-branch");
+  console.log("autre-autre-branch added");
 });
