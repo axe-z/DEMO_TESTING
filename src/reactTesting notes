@@ -1,0 +1,1015 @@
+///////////////////////////////////////////////////////////////////////////////////////////////
+																 Installation //
+///////////////////////////////////////////////////////////////////////////////////////////////
+Enzyme est la pour mounter les components, et donner des selector et des events, 
+enzyme ne nous sert pas pour tester DONC FAIRE ATTENTION ET NE PAS PRENDRE LEUR METHODE A EUX, JEST fait ce boulot . LES METHODES SONT SIMILAIRE, MAIS OON VEUT JEST. 
+DOCS 
+https://airbnb.io/enzyme/
+
+JEST EST DEJA DANS CRA . et fait les tests comme on disait , mais mount par defaut sans enzyme, 
+a la place jest utilise react-dom par defaut
+DOCS 
+https://jestjs.io/docs/en/getting-started.html
+
+ENZYME lui sert a creer le virtual dom, mounter les components ( comme react-dom le fait )
+et 
+- permet donc de faire des tests sans le browser. 
+- permet de naviguer le dom avec des selector type jquery, et simuler des events ( click , etc...)
+- permet aussi de manipuler le state et props. 
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+                                 type de tests //
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+TDD // test driven development , test ensuite ecrit ton component
+Unit testing - tester une partie a la fois 
+Integration test - comment plusieurs test unit ( unit testing ) fonctionne ensemble 
+Acceptance / End-To-End (E2E) tests - test comment l utilisateur interagie avec l app. 
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+                                 ce qu on doit tester //
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+on veut tester ce que l app fait , behaviors, et donc devrait 
+tenir le coup si on modifie quelque peut l app. 
+
+on ne veut pas refaire nos testing a chaque petite modifications 
+
+faut choisir ses combats, 
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+jest C-R-A sans enzime , quand on creer un c-r-a , y a App.test.js la par defaut //
+///////////////////////////////////////////////////////////////////////////////////////////////
+ le lancer
+ juste faire :  npm test 
+ 
+ le test sera lancé , si on veut que ca watch , juste faire w dans le terminal et ca restera en watch mode tant quand le veut 
+ ou jusqu a ce qu on ferme cette fenetre du terminal. 
+ 
+ va lire les .test.js dans tous les rep dans src 
+ ici sans enzyme 
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App';
+
+it('renders without crashing', () => {
+  const div = document.createElement('div');
+  ReactDOM.render(<App />, div);
+  ReactDOM.unmountComponentAtNode(div);
+});
+
+IT OU TEST - meme chose 
+
+
+test('renders without crashing', () => {
+  const div = document.createElement('div');
+  ReactDOM.render(<App />, div);
+  ReactDOM.unmountComponentAtNode(div);
+});
+
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+                                 ajouter enzyme//
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+ENZYME lui sert a creer le virtual dom, mounter les components ( comme react-dom le fait )
+et 
+- permet donc de faire des tests sans le browser. 
+- permet de naviguer le dom avec des selector type jquery, et simuler des events ( click , etc...)
+- permet aussi de manipuler le state et props. 
+
+
+
+ELLE INSTALLE: 
+npm install ajv
+npm install --save-dev enzyme jest-enzyme enzyme-adapter-react-16
+
+"dependencies": {
+  "ajv": "^6.10.0",
+  "react": "^16.8.6",
+  "react-dom": "^16.8.6",
+  "react-scripts": "3.0.1"
+},
+"devDependencies": {
+  "enzyme": "^3.9.0",
+  "enzyme-adapter-react-16": "^1.13.0",
+  "enzyme-to-json": "^3.3.5",
+  "jest-enzyme": "^7.0.2"
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+                                 utilisation//
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+DOCS 
+https://airbnb.io/enzyme/
+
+import React from "react";
+import Enzyme, { configure, mount, shallow, render } from "enzyme";
+import EnzymeAdapter from "enzyme-adapter-react-16";
+import App from "./App";
+
+Enzyme.configure({ adapter: new EnzymeAdapter() });
+
+
+test("renders without crashing", () => {
+  const wrapper = shallow(<App />);
+  
+});
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+                                 DEBUG()//
+///////////////////////////////////////////////////////////////////////////////////////////////
+permet de voir ce qu on debug: 
+
+disont que App.js 
+function App() {
+  return (
+    <div className="App">
+      <h1>hello world!</h1>
+      {/* <p>{title}</p> */}
+    </div>
+  );
+}
+
+
+dans app.test.js 
+
+
+test("renders without crashing", () => {
+  const wrapper = shallow(<App />);
+  console.log(wrapper.debug());
+});
+retourne donc : 
+
+<div className="App">
+<h1>
+  hello world!
+</h1>
+</div>
+
+
+donc facile de voir maintenant nos selections possible et className 
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+faire un setup file//
+///////////////////////////////////////////////////////////////////////////////////////////////
+il est possible de faire en sorte qu avant chaque test, un setup jest puisse etre passé. 
+
+c-r-a cherche par default un fichier de configuration,
+on doit le nommer ( a la source de src ): 
+ setupTests.js 
+
+
+ import Enzyme, { configure, mount, shallow, render } from "enzyme";
+ import EnzymeAdapter from "enzyme-adapter-react-16";
+ Enzyme.configure({ adapter: new EnzymeAdapter() });
+
+Donc plus besoin de les amener dans chaque page de test. 
+
+
+on doit quand meme amener ( dans nos pages de test )
+pour pouvoir mounter nos components
+import { shallow } from "enzyme"; 
+mais pas 
+import Enzyme, { configure, mount, shallow, render } from "enzyme";
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+                                 jest EXPECT api//
+///////////////////////////////////////////////////////////////////////////////////////////////
+EXPECT est une fn utile pour verifier / tester  nos components. 
+
+
+
+expect(value)
+expect.extend(matchers)
+expect.anything()
+expect.any(constructor)
+expect.arrayContaining(array)
+expect.assertions(number)
+expect.hasAssertions()
+expect.not.arrayContaining(array)
+expect.not.objectContaining(object)
+expect.not.stringContaining(string)
+expect.not.stringMatching(string | regexp)
+expect.objectContaining(object)
+expect.stringContaining(string)
+expect.stringMatching(string | regexp)
+expect.addSnapshotSerializer(serializer)
+.not
+.resolves
+.rejects
+.toBe(value)
+.toHaveBeenCalled()
+.toHaveBeenCalledTimes(number)
+.toHaveBeenCalledWith(arg1, arg2, ...)
+.toHaveBeenLastCalledWith(arg1, arg2, ...)
+.toHaveBeenNthCalledWith(nthCall, arg1, arg2, ....)
+.toHaveReturned()
+.toHaveReturnedTimes(number)
+.toHaveReturnedWith(value)
+.toHaveLastReturnedWith(value)
+.toHaveNthReturnedWith(nthCall, value)
+.toBeCloseTo(number, numDigits?)
+.toBeDefined()
+.toBeFalsy()
+.toBeGreaterThan(number)
+.toBeGreaterThanOrEqual(number)
+.toBeLessThan(number)
+.toBeLessThanOrEqual(number)
+.toBeInstanceOf(Class)
+.toBeNull()
+.toBeTruthy()
+.toBeUndefined()
+.toBeNaN()
+.toContain(item)
+.toContainEqual(item)
+.toEqual(value)
+.toHaveLength(number)
+.toMatch(regexpOrString)
+.toMatchObject(object)
+.toHaveProperty(keyPath, value?)
+.toMatchSnapshot(propertyMatchers?, hint?)
+.toMatchInlineSnapshot(propertyMatchers?, inlineSnapshot)
+.toStrictEqual(value)
+.toThrow(error?)
+.toThrowErrorMatchingSnapshot(hint?)
+.toThrowErrorMatchingInlineSnapshot(inlineSnapshot)
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+                                 tester avec Expect//
+///////////////////////////////////////////////////////////////////////////////////////////////
+expect lance une erreur  quand c est false 
+
+
+import React from "react";
+import Enzyme, { configure, mount, shallow, render } from "enzyme";
+import EnzymeAdapter from "enzyme-adapter-react-16";
+import App from "./App";
+
+Enzyme.configure({ adapter: new EnzymeAdapter() });
+
+test("renders without crashing", () => {
+  const wrapper = shallow(<App />);
+  console.log(wrapper.debug());
+
+  expect(wrapper).toBeTruthy(); //oui
+  expect(wrapper).toBeFalsy(); // erreur , c est pas falsy, y a de quoi dedans 
+});
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+                                 //AVEC UNE APP
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+tester une app:
+tester ce qui est critique a cette app 
+
+-le button , pas si il change counter dans le state ou hooks, ca peut changer ca, mais si 
+ca change dans le viewport, le browser. 
+
+function App() {
+  const [counter, setCounter] = useState(0);
+  return (
+    <div className="App">
+      <h1>Le counter est {counter}</h1>
+      <button onClick={() => setCounter(counter + 1)}>increment counter</button>
+    </div>
+  );
+}
+
+CE QU ON VOUDRAIT TESTER 
+
+import React from "react";
+import Enzyme, { configure, mount, shallow, render } from "enzyme";
+import EnzymeAdapter from "enzyme-adapter-react-16";
+import App from "./App";
+
+Enzyme.configure({ adapter: new EnzymeAdapter() });
+
+test("renders without crashing", () => {
+  const wrapper = shallow(<App />);
+});
+
+test("renders the button", () => {});
+
+test("renders the counter", () => {});
+
+test("renders the counter at 0", () => {});
+
+test("clicking the button increment the counter in the browser", () => {});
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+                         ENZYME FIND('SELECTOR') //</div>
+///////////////////////////////////////////////////////////////////////////////////////////////
+https://airbnb.io/enzyme/docs/api/ShallowWrapper/find.html
+
+
+
+
+POUR TROUVER NOS TRUCS ( NODES ) A TESTER DANS LES COMPONENTS, ON PEUT CHERCHER PAR CLASSNAME, 
+TAGS , ET TOUS LES ATTRIBUTS POSSIBLES .
+
+classNAME syntax: (.foo, .foo-bar, etc.)
+element tag name syntax:  (input, div, span, etc.)
+id syntax: (#foo, #foo-bar, etc.)
+attribute syntax: ([href="foo"], [type="text"], and the other attribute selectors listed here.)
+universal syntax:  (*)
+
+PARCE QUE LES CLASS PEUVENT CHANGER ENTRE EMPLOYÉS, ON SUGGERE DE METTRE UN ATTRIB JUST POUR TEST, 
+GENRE : 
+
+pour les attribs on doit mettre entre:  [] donc .find('[test-attr="counter-display"]')
+
+<div className="App" data-test="">  
+<h1>Le counter est {counter}</h1>
+
+<button onClick={() => setCounter(counter + 1)}>increment counter</button>
+
+
+ET DANS LE TEST :
+
+test("renders without crashing", () => {
+  const wrapper = shallow(<App />);
+  const appComponent = wrapper.find('[data-test="component-app"]'); //component-nomDuComponent
+});
+
+ca ne sortirait pas d erreur a ce point ci, meme si dans le component il y avait pas cet attribut 
+
+PARCE Q UON NE FAIT PAS D ASSERTION, EXPECT RIEN : 
+
+test("renders without crashing", () => {
+  const wrapper = shallow(<App />);
+  const appComponent = wrapper.find('[data-test="component-app"]');
+
+  expect(appComponent.length).toBe(1);  
+});
+
+   
+on aura une erreur parce que 
+<div className="App" data-test=""> dit pas "component-app"</div> 
+
+si on l ajoute , le test passe 
+<div className="App" data-test="component-app"></div> 
+
+
+
+
+MEME CHOSE MAINTENANT POUR LE BUTTON :
+
+test("renders the button", () => {
+  const wrapper = shallow(<App />);
+  const appComponent = wrapper.find('[data-test="increment-button"]');
+  //ou 
+  const appComponent = wrapper.find("button");
+  expect(appComponent.length).toBe(1);
+});
+
+et app.js 
+<button onClick={() => setCounter(counter + 1)} data-test="increment-button">
+        increment counter
+ </button>
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+                              EVITER DE SE REPETER DANS NOTRE CODE TEST //
+///////////////////////////////////////////////////////////////////////////////////////////////
+app.test.js
+
+const setup = (props = {}, state = null) => {
+  return shallow(<App {...props} />);
+};
+
+LA FUNCTION PERMET DE FAIRE UN SHALLOW DE APP 
+
+MAINTENANT :
+test("renders without crashing", () => {
+  // const wrapper = shallow(<App />); DEVIENT
+  const wrapper = setup();
+  
+  const appComponent = wrapper.find('[data-test="component-app"]');
+  expect(appComponent.length).toBe(1);
+});
+
+
+
+SE FAIRE UNE METHODE POUR LE DATA-TEST ATTR: 
+ 
+const findByTestAttr = (wrapper, val) => {
+  return wrapper.find(`[data-test="${val}"]`);
+};
+
+DONC MAINTENANT NOS TEST :
+
+test("renders without crashing", () => {
+  const wrapper = setup();
+  const appComponent = findByTestAttr(wrapper, "component-app");
+
+  expect(appComponent.length).toBe(1);
+});
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+                                 js docs//
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+monte une interface de notre code , ici sur la FN setup 
+
+lancer JS  DOCS : slash start star (/**) le reste ce fait seul 
+
+
+comment on ecrit ca: 
+- PREMIERE LIGNE ON DIT CE QU ON SOUHAITE DE LA FN 
+- @function LE NOM DE LA FN 
+- * @param {object (type)} props - DESCRIPTION DU PREMIER PARAM DE LA FN 
+- * @param {object} state - Initial state for setup -  DESCRIPTION DU DEUXIEME PARAM DE LA FN 
+- * @returns {ShallowWrapper} -DESCRIPTION DE CE QUE LA FN RETOURNE 
+ */
+
+
+donc: 
+on va noter la function SETUP , qui va nous aider dans nos tests pour le state 
+/**
+ * Factory function pour creer un ShallowWrapper pour le compoment App.
+ * @function setup
+ * @param {object} props - Component props specifique a ce setup
+ * @param {object} state - Initial state for setup
+ * @returns {ShallowWrapper}
+ */
+ 
+const setup = (props = {}, state = null) => {
+  return shallow(<App {...props} />);
+};
+
+
+ici sur la FN qui retourne le data-test 
+
+
+/**
+ * return shallowWrapper qui contain le nodes avec l attr data-test
+ * @param {ShallowWrapper} wrapper - wrapper enzyme
+ * @param {string} val - value du data-test
+ * @returns {ShallowWrapper}
+ */
+
+const findByTestAttr = (wrapper, val) => {
+  return wrapper.find(`[data-test="${val}"]`);
+};
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+                                 JOUER AVEC LE STATE AVEC ENZYME//
+///////////////////////////////////////////////////////////////////////////////////////////////
+.setState(nextState[, callback]) => Self
+
+https://airbnb.io/enzyme/docs/api/ShallowWrapper/setState.html
+
+
+mettons qu on a un component Foo et que le state donne le nom de la className 
+
+class Foo extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { name: 'foo' };
+  }
+
+  render() {
+    const { name } = this.state;
+    return (
+      <div className={name} />
+    );
+  }
+}
+
+
+const wrapper = shallow(<Foo />);
+expect(wrapper.find('.foo')).to.have.lengthOf(1); // VRAI 
+expect(wrapper.find('.bar')).to.have.lengthOf(0); // VRAI .BAR EXISTE PAS 
+wrapper.setState({ name: 'bar' }); //SI ON CHANGE LE STATE AVEC ENZYME 
+expect(wrapper.find('.foo')).to.have.lengthOf(0); // .FOO EXISTE PU 
+expect(wrapper.find('.bar')).to.have.lengthOf(1); //.BAR EXISTE MAINTENANT
+
+
+
+et avec STATE 
+https://airbnb.io/enzyme/docs/api/ShallowWrapper/state.html
+
+
+.state([key]) => Any
+key (String [optional]): If provided, the return value will be the this.state[key] of the root component instance.
+
+class App extends React.Component {
+  state = {
+    counter: 0
+  };
+  render() {
+    const { counter } = this.state;
+    return (
+      <div className="App" data-test="component-app">
+        <h1 data-test="counter-display">Le counter est {counter}</h1>
+        <button
+          onClick={() => this.setState({ counter: this.state.counter + 1 })}
+          data-test="increment-button">
+          increment counter
+        </button>
+      </div>
+    );
+  }
+}
+
+
+test("renders the counter at 0", () => {
+  const wrapper = setup();
+  expect(wrapper.state("counter")).toBe(0);
+});
+
+//OU plus descriptif
+test("renders the counter at 0", () => {
+  const wrapper = setup();
+  const initialCounterState = wrapper.state("counter");
+  expect(initialCounterState).toEqual(0); 
+});
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+                                TESTER LE CLICK simulate() //
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+on va ajuster notre methode de wrappin avec la FN setState d'enzyme :
+
+const setup = (props = {}, state = null) => {
+  const wrapper = shallow(<App {...props} />);
+  //ajouter notre state au wrapper
+  if (state) wrapper.setState(state);
+  return wrapper;
+};
+
+DEJA , PASSER L OBJECT COUNTER EN STATE PASSE LE TEST 
+
+test("clicking the button increment the counter in the browser", () => {
+  //donner une val a notre counter
+  const counter = 7;
+  const wrapper = setup(null, { counter: counter }); //null pour props, doit passer un obj pour state. 
+  expect(wrapper.state("counter")).toBe(7);
+});
+
+
+Maintenant si on simule un click , donc change , incremente le state de 1 
+
+test("clicking the button increment the counter in the browser", () => {
+  //donner une val a notre counter
+  const counter = 7;
+  const wrapper = setup(null, { counter });
+  //trouver le button
+  const button = wrapper.find("button");
+  button.simulate("click");
+  //le state augmente de1
+  expect(wrapper.state("counter")).toBe(8);
+});
+
+
+
+OU pour verifier ce qui apparait a l ecran 
+toContain permet de trouver si meleé a du text. 
+
+
+test("clicking the button increment the counter in the browser", () => {
+  //donner une val a notre counter
+  const counter = 7;
+  const wrapper = setup(null, { counter });
+
+  const button = wrapper.find("button");
+  button.simulate("click");
+  wrapper.update(); //pas necessaire ici  https://airbnb.io/enzyme/docs/api/ShallowWrapper/update.html
+  const counterDisplay = findByTestAttr(wrapper, "counter-display");
+  expect(counterDisplay.text()).toContain("8");
+ 
+});
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+                                 passer des props//
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+const setup = (props = {}, state = null) => {
+  const wrapper = shallow(<Congrats {...props} />);
+  //ajouter notre state au wrapper
+  if (state) wrapper.setState(state);
+  return wrapper;
+};
+
+
+
+test("renders rien quand 'success props' est false", () => {
+  const wrapper = setup({ success: false });
+  const congratsComponent = findByTestAttr(wrapper, "component-congrats");
+
+  expect(congratsComponent.text()).toBe("");
+});
+
+test("renders nono-empty congrats message quand success is true", () => {
+  const wrapper = setup({ success: true });
+  const message = findByTestAttr(wrapper, "component-congrats");
+
+  expect(message.text()).toBe("Felicitation!");
+});
+
+
+et le component 
+
+export default props => {
+  return props.success ? (
+    <div className="App" data-test="component-congrats">
+      <span data-test="congrats-message">Felicitation!</span>
+    </div>
+  ) : (
+    <div className="App" data-test="component-congrats" />
+  );
+};
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+                                 check-prop-types  un test utility (pour prop-types)//
+///////////////////////////////////////////////////////////////////////////////////////////////
+https://www.npmjs.com/package/check-prop-types
+
+npm install prop-types
+npm install check-prop-types
+
+
+testUtility.js 
+import checkPropTypes from 'check-prop-types';
+
+export const checkProps = (component, conformingProp) => {
+  const propError = checkPropTypes(component.propTypes, conformingProp, "prop", component.name);
+  expect(propError).toBeUndefined();
+};
+
+
+Congrats.js 
+import React from "react";
+import PropTypes from "prop-types";
+
+const Congrats = props => {
+  return props.success ? (
+    <div className="App" data-test="component-congrats">
+      <span data-test="congrats-message">Felicitation!</span>
+    </div>
+  ) : (
+    <div className="App" data-test="component-congrats" />
+  );
+};
+
+export default Congrats;
+
+Congrats.propTypes = {
+  success: PropTypes.bool
+};
+
+
+
+
+DANS NOTRE TEST:
+import React from "react";
+import Enzyme, { configure, mount, shallow, render } from "enzyme";
+import EnzymeAdapter from "enzyme-adapter-react-16";
+import checkPropTypes from "check-prop-types";
+import { findByTestAttr, checkProps } from "./test/testUtils";
+import Congrats from "./Congrats";
+
+test("ne retourne pas de warnings avec les props convenus", () => {
+  const expectedProps = { success: false };
+  //pu besoin des 2 prochaines lignes grace a notre Fn utilitaire
+  // const propError = checkPropTypes(Congrats.propTypes, expectedProps, "prop", Congrats.name);
+  // expect(propError).toBeUndefined();
+  checkProps(Congrats, expectedProps);
+});
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+                                 passer des props dans nos tests//
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+const defaultProps = { success: false };
+
+const setup = (props = {}, state = null) => {
+  const setupProps = { ...defaultProps, ...props }; //overwrite si on passe nos props 
+  const wrapper = shallow(<Congrats {...setupProps} />);
+  //ajouter notre state au wrapper
+  if (state) wrapper.setState(state);
+  return wrapper;
+};
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+                                 faire un setup file//
+///////////////////////////////////////////////////////////////////////////////////////////////
+il est possible de faire en sorte qu avant chaque test, un setup jest puisse etre passé. 
+
+c-r-a cherche par default un fichier de configuration,
+on doit le nommer ( a la source de src ): 
+ setupTests.js 
+
+
+ import Enzyme, { configure, mount, shallow, render } from "enzyme";
+ import EnzymeAdapter from "enzyme-adapter-react-16";
+ Enzyme.configure({ adapter: new EnzymeAdapter() });
+
+Donc plus besoin de les amener dans chaque page de test. 
+
+
+on doit quand meme amener ( dans nos pages de test )
+pour pouvoir mounter nos components
+import { shallow } from "enzyme"; 
+mais pas 
+import Enzyme, { configure, mount, shallow, render } from "enzyme";
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+                                 passer un array de proptypes//
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+import React from "react";
+import PropTypes from "prop-types";
+
+const GuessesWords = props => {
+  return <div data-test="component-guessed" />;
+};
+export default GuessesWords;
+
+
+QUAND ON PASSE UNE STRUTURE EN PROPS 
+GuessesWords.propTypes = {
+  guessedWords: PropTypes.arrayOf(
+    PropTypes.shape({
+      guessedWord: PropTypes.string.isRequired,
+      letterMatchCount: PropTypes.number.isRequired
+    })
+  ).isRequired
+};
+
+
+LE TEST :
+
+const defaultProps = {
+  guessedWords: [{ guessedWord: "train", letterMatchCount: 3 }]
+};
+
+ 
+const setup = (props = {}, state = null) => {
+  const setupProps = { ...defaultProps, ...props };
+  return shallow(<GuessedWords {...setupProps} />);
+ 
+};
+
+test("n envoie pas de warning avec les props entendue", () => {
+  checkProps(GuessedWords, defaultProps);
+ 
+});
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+                                 describe(cb) - beforeEach//
+///////////////////////////////////////////////////////////////////////////////////////////////
+describe : une maniere de grouper des tests 
+beforeEach : permet d etablir pour chaque test certaine chose , ici - le wrapper sans props 
+
+COMPONENT:
+const GuessesWords = props => {
+  return (
+    <div data-test="component-guessed">
+      {props.guessedWord && <div data-test="guess-instructions"> vous devez ecrire jouale</div>}
+    </div>
+  );
+};
+
+GuessesWords.propTypes = {
+  guessedWords: PropTypes.arrayOf(
+    PropTypes.shape({
+      guessedWord: PropTypes.string.isRequired,
+      letterMatchCount: PropTypes.number.isRequired
+    })
+  ).isRequired
+};
+
+LE TEST: 
+
+describe("si aucun mot est tenté", () => {
+  let wrapper; // pour eviter undefined 
+  beforeEach(() => {
+    wrapper = setup({ guessedWord: [] });
+  });
+  test("tester sans props", () => {
+    // const wrapper = setup({ guessedWord: [] });
+    const guessedComponent = findByTestAttr(wrapper, "component-guessed");
+    expect(guessedComponent.length).toBe(1);
+  });
+  test("donne les intructions a un mot tenté", () => {
+    const instructions = findByTestAttr(wrapper, "guess-instructions");
+    expect(instructions.text().length).not.toBe(0); //not !renverse
+  });
+});
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+                                AVEC REDUX  //
+///////////////////////////////////////////////////////////////////////////////////////////////
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+																 jest C-R-A//
+///////////////////////////////////////////////////////////////////////////////////////////////
+ DEja dans c-r-a ,
+ 
+ juste faire :  npm test 
+ 
+ le test sera lancé , si on veut que ca watch , juste faire w dans le terminal et ca restera en watch mode tant quand le veut 
+ ou jusqu a ce qu on ferme cette fenetre du terminal. 
+ 
+ va lire les .test.js dans tous les rep dans src 
+ 
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App';
+
+it('renders without crashing', () => {
+  const div = document.createElement('div');
+  ReactDOM.render(<App />, div);
+  ReactDOM.unmountComponentAtNode(div);
+});
+
+IT OU TEST - meme chose 
+
+
+test('renders without crashing', () => {
+  const div = document.createElement('div');
+  ReactDOM.render(<App />, div);
+  ReactDOM.unmountComponentAtNode(div);
+});
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+                                 Autre cour//
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+IL FAUT ( pas dans le cour ):
+npm install --save-dev enzyme enzyme-adapter-react-16 enzyme-to-json
+
+AJOUTER AU PACKAGE.JSON:
+"jest": {
+  "snapshotSerializers": ["enzyme-to-json/serializer"]
+}
+
+
+
+FAIRE A LA RACINE UIN FICHIER: setupTests.js
+import { configure } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
+configure({ adapter: new Adapter() });
+
+
+ensuite on nomme les fichiers:  NomDuComp.test.js
+
+
+
+enzyme permet si on a 3000 components dans un projet de mounter
+ import { mount, shallow, render } from 'enzyme';
+QUE CE QU ON VEUT TESTER,
+
+
+
+SHALLOW ,LE BEST -  LUI VA RAMENER LE COMPONENT ET SI D AUTRE COMPONENT CHILD Y SONT, IL NE VA PAS REGARDER PLUS LOIN.
+
+
+UTILISATION:
+ON DOIT AMENER REACT
+import React from 'react';
+import { mount, shallow, render } from 'enzyme';
+
+import NavigationItem from './NavigationItem';
+
+
+describe('MyComponent', () => {
+  it('si pas de auth, retourne 2 elem', () => {
+    const component = shallow(<NavigationItems  />);
+
+    expect(component.find(NavigationItem)).toHaveLength(2);
+  });
+
+});
+
+DONC DANS REACT NAVIGATIONITEMS RETOURNE 2 CHOIX SI LA PROP ISAUTHENTICATED EST FASLE DE NAVIGATIONITEM (SINGULIER)
+DONC LE TEST PASSE
+
+
+AJOUTER UNE PROP isAuthenticated={true}:
+
+it('si AVEC auth, retourne 2 elem', () => {
+	const component = shallow(<NavigationItems isAuthenticated={true} />); // ici
+
+	expect(component.find(NavigationItem)).toHaveLength(3);
+});
+
+DONC ON PEUT INJECTIER LA VALEUR DE LA PROP.
+
+
+SI PLUSIEURS TEST SUR UN SEUL COMPONENT
+BEFOREEACH VA CREER LE COMPONENT 1 FOIS, ET SI ON DOIT AJOUTER DES PROPS :
+COMPONENT.SETPROPS(ISAUTHENTICATED={TRUE})
+
+describe('MyComponent', () => {
+	let component;
+beforeEach(() => {
+	 component = shallow(<NavigationItems  />);
+})
+
+  it('si pas de auth, retourne 2 elem', () => {
+    expect(component.find(NavigationItem)).toHaveLength(2);
+  });
+
+	it('si AVEC auth, retourne 2 elem', () => {
+		component.setProps(isAuthenticated={true})
+    expect(component.find(NavigationItem)).toHaveLength(3);
+  });
+});
